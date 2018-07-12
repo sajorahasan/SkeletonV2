@@ -42,18 +42,18 @@ public abstract class BaseFragment extends DaggerFragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void print(String message) {
+    public void print(String msg) {
         if (BuildConfig.LOG_ENABLE)
-            Log.d(TAG, message);
+            Log.d(TAG, msg);
     }
 
-    public void print(String TAG, String message) {
+    public void print(String TAG, String msg) {
         if (BuildConfig.LOG_ENABLE)
-            Log.d(TAG, message);
+            Log.d(TAG, msg);
     }
 
-    public void showToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    public void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
 }

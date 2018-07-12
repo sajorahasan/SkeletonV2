@@ -6,13 +6,15 @@ import android.arch.persistence.room.Query;
 
 import com.sajorahasan.skeleton.model.Question;
 
+import io.reactivex.Single;
+
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface AppDao {
 
     @Query("SELECT * FROM Question")
-    Question getAllData();
+    Single<Question> getAllData();
 
 //    @Query("SELECT * FROM Table WHERE id=:id")
 //    Table getTableById(int id);

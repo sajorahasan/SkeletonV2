@@ -7,7 +7,7 @@ import android.content.Context;
 
 import com.sajorahasan.skeleton.model.Question;
 
-@Database(entities = {Question.class}, version = 1,exportSchema = false)
+@Database(entities = {Question.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "tiffinDatabase.db";
@@ -21,7 +21,10 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static AppDatabase create(final Context context) {
-        return Room.databaseBuilder(context, AppDatabase.class, DB_NAME).allowMainThreadQueries().build();
+        return Room.databaseBuilder(context, AppDatabase.class, DB_NAME)
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
     }
 
     public abstract AppDao getDao();

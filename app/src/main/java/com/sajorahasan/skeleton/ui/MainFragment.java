@@ -4,6 +4,7 @@ package com.sajorahasan.skeleton.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,11 @@ import com.sajorahasan.skeleton.utils.Prefs;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,9 +61,25 @@ public class MainFragment extends BaseFragment {
                         print("Data:==> " + question.getQuestionItems().size());
                         hideLoader();
 
-                        long result = appDB.getDao().insert(question);
-                        print("result " + result);
-                        print("Size is " + appDB.getDao().countSize());
+                        Completable.fromAction(() -> appDB.getDao().insert(question))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new CompletableObserver() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        print(TAG, "onComplete: completed");
+                                        print(TAG, "Size is " + appDB.getDao().countSize());
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.e(TAG, "onError: " + e.getLocalizedMessage());
+                                    }
+                                });
 
                     }, (error) -> {
                         print("Error:==> " + error.getMessage());
@@ -77,5 +98,6 @@ public class MainFragment extends BaseFragment {
         super.onDestroy();
         if (disposable != null && !disposable.isDisposed())
             disposable.dispose();
+        hideLoader();
     }
 }
