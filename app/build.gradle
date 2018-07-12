@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "com.sajorahasan.skeleton"
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    flavorDimensions "default"
+    productFlavors {
+        //local,staging,live
+        development {
+            buildConfigField 'String', 'BASE_URL', '"https://api.stackexchange.com/2.2/"'
+            buildConfigField "boolean", "LOG_ENABLE", "true"
+        }
+        production {
+            buildConfigField 'String', 'BASE_URL', '"https://api.stackexchange.com/2.2/"'
+            buildConfigField "boolean", "LOG_ENABLE", "false"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+
+    //Dagger
+    def daggerVersion = '2.16'
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-android-processor:${daggerVersion}"
+    implementation "com.google.dagger:dagger:${daggerVersion}"
+    implementation "com.google.dagger:dagger-android:${daggerVersion}"
+    implementation "com.google.dagger:dagger-android-support:${daggerVersion}"
+
+    //Retrofit
+    def retrofitVersion = '2.4.0'
+    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-scalars:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+
+    //RxJava
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    //RxAndroid
+    implementation('io.reactivex.rxjava2:rxandroid:2.0.2') {
+        exclude module: 'rxjava'
+    }
+    //Logging Interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //Room
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+}
